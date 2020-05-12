@@ -8,7 +8,7 @@ import numpy as np
 
 #text = textract.process(r'C:/Users/Francesco/Desktop/LIBRI DA LEGGE FRANCE/fake news detection.pdf', method='pdfminer')
 #stdout, stderr = popen.communicate()
-file=open(r'C:/Users/Francesco/Desktop/LIBRI DA LEGGE FRANCE/the element of statistical learning.pdf', 'rb')
+file=open(r'C:/Users/Francesco/Desktop/LIBRI DA LEGGE FRANCE/the element of statistical learning.pdf', 'rb') # QUESTO È PERSONALE
 fileReader = PyPDF2.PdfFileReader(file)
 print(fileReader.numPages)
 
