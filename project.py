@@ -21,7 +21,7 @@ for page in fileReader.pages:
 #print(pageObj.extractText())
 #fileReader.close()
 
-cloud = WordCloud().generate(pageData)
+cloud = WordCloud().generate(pageData)#ancora non va bene
 
 plt.imshow(cloud)
 plt.axis('off')
