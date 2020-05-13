@@ -25,12 +25,10 @@ print(raw['content'])
 #print(pageObj.extractText())
 #fileReader.close()
 
-cloud = WordCloud().generate(pageData)#ancora non va bene
-# MA LAVORANDO CI AVVICINIAMO !! NIENTE VIENTE DA NIENTE.
-
+cloud = WordCloud().generate(pageData)
 plt.imshow(cloud)
 plt.axis('off')
-plt.show() #ciaooo
+plt.show()
 
 
 
