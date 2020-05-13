@@ -5,6 +5,7 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from PIL import Image
 import numpy as np
+from tika import parser
 
 #text = textract.process(r'C:/Users/Francesco/Desktop/LIBRI DA LEGGE FRANCE/fake news detection.pdf', method='pdfminer')
 #stdout, stderr = popen.communicate()
@@ -16,6 +17,9 @@ pageData = ''
 for page in fileReader.pages:
     pageData += page.extractText()
     #print(pageData)
+
+raw = parser.from_file('sample.pdf')
+print(raw['content'])
 
 #pageObj =fileReader.getPage(100)
 #print(pageObj.extractText())
