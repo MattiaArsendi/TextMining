@@ -25,7 +25,7 @@ cloud = WordCloud().generate(pageData)
 
 plt.imshow(cloud)
 plt.axis('off')
-plt.show()
+plt.show() #ciaooo
 
 
 
