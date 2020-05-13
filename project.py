@@ -23,7 +23,7 @@ for page in fileReader.pages:
 
 cloud = WordCloud().generate(pageData)#ancora non va bene
 # MA LAVORANDO CI AVVICINIAMO !! NIENTE VIENTE DA NIENTE.
-
+# forza ragazzi
 plt.imshow(cloud)
 plt.axis('off')
 plt.show() #ciaooo
