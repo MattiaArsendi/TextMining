@@ -9,6 +9,7 @@ from tika import parser
 
 #text = textract.process(r'C:/Users/Francesco/Desktop/LIBRI DA LEGGE FRANCE/fake news detection.pdf', method='pdfminer')
 #stdout, stderr = popen.communicate()
+
 file=open(r'C:/Users/Francesco/Desktop/LIBRI DA LEGGE FRANCE/the element of statistical learning.pdf', 'rb') # QUESTO È PERSONALE
 fileReader = PyPDF2.PdfFileReader(file)
 print(fileReader.numPages)
@@ -18,8 +19,10 @@ for page in fileReader.pages:
     pageData += page.extractText()
     #print(pageData)
 
-raw = parser.from_file('sample.pdf')
+raw = parser.from_file(r'C:\Users\Francesco\Desktop\altro\LIBRI DA LEGGE FRANCE\the element of statistical learning.pdf')
 print(raw['content'])
+
+
 
 #pageObj =fileReader.getPage(100)
 #print(pageObj.extractText())
