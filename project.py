@@ -2,9 +2,10 @@ import pandas as pd
 from nltk.tokenize import sent_tokenize
 import nltk
 import ssl
-from collections import Counter#utile per il dizionario
+from collections import Counter #utile per il dizionario
+import numpy as np
 
-PATH=r"C:\Users\Francesco\Desktop\altro\ch2.txt"
+PATH=r"ch2.txt"
 
 
 
@@ -54,6 +55,19 @@ plt.show()
 from nltk.corpus import stopwords
 nltk.download('stopwords')
 stop_words= set(stopwords.words("english"))
+
+
+# ELIMINAZIONE  le lettere e i numeri
+list('abcdefghijklmnopqrstuvwxyz')
+lettere = list('abcdefghijklmnopqrstuvwxyz')
+numeri = list('0123456789')
+
+for i in range(0,25):
+stop_words.add(lettere[i])
+for i in range(0,10):
+stop_words.add(numeri[i])
+
+
 # These are the several step words considered!
 print(stop_words)
 
@@ -116,7 +130,7 @@ dict2=dict((k, v) for k, v in dict1.items() if v <= 100)#potrebbe essere interes
 dict2
 
 # Rivediamo graficamente ora i risultati dopo la pulizia
-fdist = FreqDist(dict2)#si puo fare sia su una stringa che su un dizionario
+fdist = FreqDist(dict2) #si puo fare sia su una stringa che su un dizionario
 fdist.plot(30,cumulative=False)
 plt.show()
 print ("fatto")
