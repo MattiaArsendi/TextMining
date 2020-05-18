@@ -2,11 +2,24 @@ import pandas as pd
 from nltk.tokenize import sent_tokenize
 import nltk
 import ssl
+from collections import Counter#utile per il dizionario
+
+PATH=r"C:\Users\Francesco\Desktop\altro\ch2.txt"
+
+
+
+
+def Convert(raw1): #converte la stringa in lista (al momento non utile ma potrebbe sempre servire)
+    raw1=raw1.strip("\n") 
+    raw1 = raw1.replace('\n'," ")
+    l=raw1.split(" ")
+    return l
+
 
 # CARICAMENTO TXT IN FORMATO STRINGA
-f = open('ch2.txt')
+f = f = open(PATH,encoding="utf8")#questo dovrebbe funzionare per tutti
 raw = f.read()
-
+raw[1:200]#prova
 # FIRST STEP, TOKENIZATION, namely the process of breaking down a text paragraph into smaller chunks
 # What's a token?  Token is a single entity that is building blocks for sentence or paragraph.
 try:
@@ -47,7 +60,7 @@ print(stop_words)
 # REMOVING STOPWORDS
 text1 = word_tokenize(raw.lower())
 print(text1)
-stopwords = [x for x in text1 if x not in a]
+stopwords = [x for x in text1 if x not in stop_words ]
 print(stopwords)
 
 # Come si puo vedere, si passa da 35528 token, a 30071
@@ -88,16 +101,25 @@ for w in stopwords:
 
 # PULISCO INOLTRE DALLA PUNTEGGIATURA
 final= [word for word in lemmed_words if word.isalnum()]
+type(final)
 
+final[45:100] #prova
 
 # STRINGA PULITA
-print(final)
 
+dict1=Counter(final)
+vv={k: v for k, v in sorted(dict1.items(), key=lambda item: item[1])}
+
+#tramite i comandi che seguono possiamo modellare il nostro dizionario eliminando facilmente elementi
+dict1 = dict((k, v) for k, v in dict1.items() if v >= 10)
+dict2=dict((k, v) for k, v in dict1.items() if v <= 100)#potrebbe essere interessante togliere anche le parole che si ripetono troppo
+dict2
 
 # Rivediamo graficamente ora i risultati dopo la pulizia
-fdist = FreqDist(final)
+fdist = FreqDist(dict2)#si puo fare sia su una stringa che su un dizionario
 fdist.plot(30,cumulative=False)
 plt.show()
+print ("fatto")
 
 
 
