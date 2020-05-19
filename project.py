@@ -5,7 +5,7 @@ import ssl
 from collections import Counter #utile per il dizionario
 import numpy as np
 
-PATH=r"../desktop/ch2.txt"
+PATH=r"C:\Users\Francesco\Desktop\altro\ch2.txt"
 
 
 
@@ -100,23 +100,25 @@ REM=['CC','CD','DT','IN','MD','NNP','NNPS','PRP','PSRP$','RB','RBR','RBS','TO','
 
 len(tagged_words)
 
+def elimina(tagged_words1):#elimina gli elementi in base al tag
+    res = list(zip(*tagged_words1)) #prendo solo i tag
+    len(tagged_words1)
+    len(res)
+    res=res[1]
+    l=0
+    i=0
+    while (l+i<len(tagged_words1)):  #il ciclo mi rimuove le parole che non "servono
+        tup=res[i]
+        for j in REM:
+            if tup==j: #serve il secondo elemento della tupla: il tag (il non funzionamento dipende da questo)
+                tagged_words1.remove(tagged_words1[i])#remove non và bene per le tuple
+                l=l+1
+                i=i-1
+        i=i+1
+    return tagged_words1
 
-tagged_words[1]
-#########questo non va bisogna vedere soltanto come rimuovere gli elementi di una tupla
-
-tagged_words1=tagged_words
-res = list(zip(*tagged_words)) #prendo solo i tag
-len(res[1])
-for i in np.arange(0,35527):  
-    tup=res[i]
-    for j in REM:
-        if tup[i]==j: #serve il secondo elemento della tupla: il tag (il non funzionamento dipende da questo)
-            tagged_words1=tagged_words[i].remove()#remove non và bene per le tuple
-            
-    
-len(tagged_words1)
-####adesso invece anche questo dà errore
-
+tagged_words=elimina(tagged_words)
+len(tagged_words)#dovrebbe funzionare
 
 # STEMMING:
 # Stemming is a process of linguistic normalization, which reduces words to their word root word or chops off the derivational affixes.
