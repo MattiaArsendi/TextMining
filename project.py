@@ -5,7 +5,7 @@ import ssl
 from collections import Counter #utile per il dizionario
 import numpy as np
 
-PATH=r"ch2.txt"
+PATH=r"C:\Users\Francesco\Desktop\altro\ch2.txt"
 
 
 
@@ -63,9 +63,9 @@ lettere = list('abcdefghijklmnopqrstuvwxyz')
 numeri = list('0123456789')
 
 for i in range(0,25):
-stop_words.add(lettere[i])
+    stop_words.add(lettere[i])
 for i in range(0,10):
-stop_words.add(numeri[i])
+    stop_words.add(numeri[i])
 
 
 # These are the several step words considered!
@@ -102,15 +102,20 @@ REM=['CC','CD','DT','IN','MD','NNP','NNPS','PRP','PSRP$','RB','RBR','RBS','TO','
 len(tagged_words)
 
 
-#########questo non va
-for i in np.arange(0,35528-1):  
-    tup=tagged_words[i]
+tagged_words[1]
+#########questo non va bisogna vedere soltanto come rimuovere gli elementi di una tupla
+
+tagged_words1=tagged_words
+res = list(zip(*tagged_words)) #prendo solo i tag
+len(res[1])
+for i in np.arange(0,35527):  
+    tup=res[i]
     for j in REM:
-        if tup[1]==j: #secondo elemento della tupla: il tag
-            tagged_words=tagged_words.remove(tup)
-            break
+        if tup[i]==j: #serve il secondo elemento della tupla: il tag (il non funzionamento dipende da questo)
+            tagged_words1=tagged_words[i].remove()#remove non và bene per le tuple
+            
     
-len(tagged_words)
+len(tagged_words1)
 ####adesso invece anche questo dà errore
 
 
