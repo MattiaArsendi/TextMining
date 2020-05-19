@@ -5,7 +5,7 @@ import ssl
 from collections import Counter #utile per il dizionario
 import numpy as np
 
-PATH=r"C:\Users\Francesco\Desktop\altro\ch2.txt"
+PATH=r"../desktop/ch2.txt"
 
 
 
@@ -84,7 +84,6 @@ fdist = FreqDist(stopwords)
 fdist.plot(30,cumulative=False)
 plt.show()
 
-
 ###TAGGING
 
 nltk.download('averaged_perceptron_tagger')
@@ -117,8 +116,6 @@ for i in np.arange(0,35527):
     
 len(tagged_words1)
 ####adesso invece anche questo dà errore
-
-
 
 
 # STEMMING:
@@ -172,6 +169,13 @@ fdist.plot(30,cumulative=False)
 plt.show()
 print ("fatto")
 
+# bigrams 
+bigrams = nltk.bigrams(final)
+print(final)
+
+fdist = FreqDist(bigrams)
+fdist.plot(30,cumulative=False)
+plt.show()
 
 
 
