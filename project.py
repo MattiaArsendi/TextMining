@@ -84,6 +84,38 @@ fdist = FreqDist(stopwords)
 fdist.plot(30,cumulative=False)
 plt.show()
 
+
+###TAGGING
+
+nltk.download('averaged_perceptron_tagger')
+
+from nltk import jsontags
+print("Parts of speech:", nltk.pos_tag(tokenized_word))
+
+tagged_words=nltk.pos_tag(tokenized_word)
+
+type(tagged_words) #lista di tuple ('parola', 'tag')
+
+#lista di tag riferita a parole che voglio rimuovere
+REM=['CC','CD','DT','IN','MD','NNP','NNPS','PRP','PSRP$','RB','RBR','RBS','TO','WDT','WPD$','WRB']
+
+len(tagged_words)
+
+
+#########questo non va
+for i in np.arange(0,35528-1):  
+    tup=tagged_words[i]
+    for j in REM:
+        if tup[1]==j: #secondo elemento della tupla: il tag
+            tagged_words=tagged_words.remove(tup)
+            break
+    
+len(tagged_words)
+####adesso invece anche questo dà errore
+
+
+
+
 # STEMMING:
 # Stemming is a process of linguistic normalization, which reduces words to their word root word or chops off the derivational affixes.
 # For example, connection, connected, connecting word reduce to a common word "connect".
