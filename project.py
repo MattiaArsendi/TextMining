@@ -6,8 +6,6 @@ import numpy as np
 PATH=r"ch2.txt"
 
 
-
-
 def Convert(raw1): #converte la stringa in lista (al momento non utile ma potrebbe sempre servire)
     raw1=raw1.strip("\n") 
     raw1 = raw1.replace('\n'," ")
@@ -47,7 +45,7 @@ fdist = FreqDist(tokenized_word)
 fdist.plot(30,cumulative=False)
 plt.show()
 
-
+####DEFINIAMO LA LISTA DELLE STOPWORDS
 # Stopwords considered as noise in the text. Text may contain stop words such as is, am, are, this, a, an, the, etc.
 
 from nltk.corpus import stopwords
@@ -75,9 +73,16 @@ print(text1)
 stopwords = [x for x in text1 if x not in stop_words ]
 print(stopwords)
 
-# Come si puo vedere, si passa da 35528 token, a 30071
+# PULISCO INOLTRE DALLA PUNTEGGIATURA
+words_nopunct= [word for word in stopwords if word.isalnum()]
+type(words_nopunct)
 
-# Rivediamo graficamente ora i risultati dopo la pulizia
+words_nopunct[45:100] #prova
+len(tokenized_word) #35528
+len(words_nopunct) #5609
+# Come si puo vedere, si passa da 35528 token, a 5609
+
+# Rivediamo graficamente ora i risultati dopo questa prima pulizia
 fdist = FreqDist(stopwords)
 fdist.plot(30,cumulative=False)
 plt.show()
@@ -87,36 +92,57 @@ plt.show()
 nltk.download('averaged_perceptron_tagger')
 
 from nltk import jsontags
-print("Parts of speech:", nltk.pos_tag(tokenized_word))
+print("Parts of speech:", nltk.pos_tag(words_nopunct))
 
-tagged_words=nltk.pos_tag(tokenized_word)
+tagged_words=nltk.pos_tag(words_nopunct)
 
 type(tagged_words) #lista di tuple ('parola', 'tag')
 
-#lista di tag riferita a parole che voglio rimuovere
+#lista di tag riferita a parole che vogliamo rimuovere
 REM=['CC','CD','DT','IN','MD','NNP','NNPS','PRP','PSRP$','RB','RBR','RBS','TO','WDT','WPD$','WRB']
 
-len(tagged_words)
+len(tagged_words) #5609
+tagged_words
 
-def elimina(tagged_words1):#elimina gli elementi in base al tag
-    res = list(zip(*tagged_words1)) #prendo solo i tag
-    len(tagged_words1)
-    len(res)
-    res=res[1]
-    l=0
-    i=0
-    while (l+i<len(tagged_words1)):  #il ciclo mi rimuove le parole che non "servono
+#la funzione restituisce un vettore lungo come la lista di tuple con 0 se la tupla è da tenere
+#e 1 se è da togliere
+def eliminare(tagged_words1):
+   
+    togli=np.zeros(len(tagged_words1))
+    res = list(zip(*tagged_words1)) #zippiamo la lista di tuple
+    res=res[1] #prendiamo solo i tag
+    for i in np.arange(len(tagged_words1)):  
+        #il ciclo prende nota di quali sono le parole da eliminare 
         tup=res[i]
         for j in REM:
-            if tup==j: #serve il secondo elemento della tupla: il tag (il non funzionamento dipende da questo)
-                tagged_words1.remove(tagged_words1[i])#remove non và bene per le tuple
-                l=l+1
-                i=i-1
-        i=i+1
-    return tagged_words1
+            if tup==j:
+                togli[i]=1
+    return togli
 
-tagged_words=elimina(tagged_words)
-len(tagged_words)#dovrebbe funzionare
+
+togli=eliminare(tagged_words)
+len(togli) #numero di elementi in totale
+sum(togli) #numero di elementi da eliminare: 875
+
+
+## creiamo l'array di indici corrispondenti alle posizioni di '1' in togli
+
+indici=np.zeros(int(sum(togli))) #inizializzoamo
+
+for i in np.arange(0, 100):
+    print(togli[i])
+
+togli= np.array(togli, dtype=int)
+finali=list(np.array(words_nopunct)[togli==0])
+
+len(finali)#4734
+
+
+#visualizziamo i risultati dopo la pulizia finale
+
+fdist = FreqDist(finali)
+fdist.plot(30,cumulative=False)
+plt.show()
 
 # STEMMING:
 # Stemming is a process of linguistic normalization, which reduces words to their word root word or chops off the derivational affixes.
@@ -126,10 +152,10 @@ from nltk.tokenize import sent_tokenize
 
 ps = PorterStemmer()
 stemmed_words=[]
-for w in stopwords:
+for w in finali:
     stemmed_words.append(ps.stem(w))
 
-print("Filtered Sentence:",stopwords)
+print("Filtered Sentence:",finali)
 print("Stemmed Sentence:",stemmed_words)
 
 #LEMMAIZATION:
@@ -144,18 +170,14 @@ lem = WordNetLemmatizer()
 
 
 lemmed_words=[]
-for w in stopwords:
+for w in finali:
     lemmed_words.append(lem.lemmatize(w,"v"))
 
-# PULISCO INOLTRE DALLA PUNTEGGIATURA
-final= [word for word in lemmed_words if word.isalnum()]
-type(final)
 
-final[45:100] #prova
 
 # STRINGA PULITA
 
-dict1=Counter(final)
+dict1=Counter(finali)
 vv={k: v for k, v in sorted(dict1.items(), key=lambda item: item[1])}
 
 #tramite i comandi che seguono possiamo modellare il nostro dizionario eliminando facilmente elementi
@@ -170,8 +192,8 @@ plt.show()
 print ("fatto")
 
 # bigrams 
-bigrams = list(nltk.bigrams(final))
-print(final)
+bigrams = list(nltk.bigrams(finali))
+print(finali)
 
 fdist = FreqDist(bigrams)
 plt.figure(figsize=(20, 10))
