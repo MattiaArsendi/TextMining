@@ -27,11 +27,6 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 nltk.download("punkt")
 
-#SENTENCE TOKENIZATION
-from nltk.tokenize import sent_tokenize
-tokenized_text=sent_tokenize(raw)
-print(tokenized_text)
-
 # WORD TOKENIZATION
 from nltk.tokenize import word_tokenize
 tokenized_word=word_tokenize(raw)
@@ -41,7 +36,7 @@ print(tokenized_word)
 from nltk.probability import FreqDist
 import matplotlib.pyplot as plt
 
-fdist = FreqDist(tokenized_word)
+fdist = FreqDist(tokenized_word)          # SAREBBE BELLO FAR VEDERE UNA EVOLUZIONE GRAFICA DELLA NOSTRA PULIZIA
 fdist.plot(30,cumulative=False)
 plt.show()
 
@@ -63,10 +58,6 @@ for i in range(0,25):
 for i in range(0,10):
     stop_words.add(numeri[i])
 
-
-# These are the several step words considered!
-print(stop_words)
-
 # REMOVING STOPWORDS
 text1 = word_tokenize(raw.lower())
 print(text1)
@@ -77,7 +68,6 @@ print(stopwords)
 words_nopunct= [word for word in stopwords if word.isalnum()]
 type(words_nopunct)
 
-words_nopunct[45:100] #prova
 len(tokenized_word) #35528
 len(words_nopunct) #5609
 # Come si puo vedere, si passa da 35528 token, a 5609
@@ -90,19 +80,12 @@ plt.show()
 ###TAGGING
 
 nltk.download('averaged_perceptron_tagger')
-
-from nltk import jsontags
 print("Parts of speech:", nltk.pos_tag(words_nopunct))
-
 tagged_words=nltk.pos_tag(words_nopunct)
-
 type(tagged_words) #lista di tuple ('parola', 'tag')
 
 #lista di tag riferita a parole che vogliamo rimuovere
 REM=['CC','CD','DT','IN','MD','NNP','NNPS','PRP','PSRP$','RB','RBR','RBS','TO','WDT','WPD$','WRB']
-
-len(tagged_words) #5609
-tagged_words
 
 #la funzione restituisce un vettore lungo come la lista di tuple con 0 se la tupla è da tenere
 #e 1 se è da togliere
@@ -134,8 +117,7 @@ for i in np.arange(0, 100):
 
 togli= np.array(togli, dtype=int)
 finali=list(np.array(words_nopunct)[togli==0])
-
-len(finali)#4734
+len(finali) #4734
 
 
 #visualizziamo i risultati dopo la pulizia finale
@@ -168,12 +150,9 @@ from nltk.stem.wordnet import WordNetLemmatizer
 nltk.download('wordnet')
 lem = WordNetLemmatizer()
 
-
 lemmed_words=[]
 for w in finali:
     lemmed_words.append(lem.lemmatize(w,"v"))
-
-
 
 # STRINGA PULITA
 
@@ -211,7 +190,6 @@ plt.savefig( 'myfig.jpg' ) # Comando che salva l'immagine nella cartella TextMin
 # the two words occur independently from one another?
 
 import math
-
 def logL(p,k,n):
     return k * math.log(p) + (n-k)* math.log(1-p+0.0001)
 
