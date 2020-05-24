@@ -5,18 +5,10 @@ import numpy as np
 
 PATH=r"ch2.txt"
 
-
-def Convert(raw1): #converte la stringa in lista (al momento non utile ma potrebbe sempre servire)
-    raw1=raw1.strip("\n") 
-    raw1 = raw1.replace('\n'," ")
-    l=raw1.split(" ")
-    return l
-
-
 # CARICAMENTO TXT IN FORMATO STRINGA
-f = f = open(PATH,encoding="utf8")#questo dovrebbe funzionare per tutti
+f = open(PATH,encoding="utf8")
 raw = f.read()
-raw[1:200]#prova
+
 # FIRST STEP, TOKENIZATION, namely the process of breaking down a text paragraph into smaller chunks
 # What's a token?  Token is a single entity that is building blocks for sentence or paragraph.
 try:
@@ -30,15 +22,14 @@ nltk.download("punkt")
 # WORD TOKENIZATION
 from nltk.tokenize import word_tokenize
 tokenized_word=word_tokenize(raw)
-print(tokenized_word)
 
 # Frequency distribution
 from nltk.probability import FreqDist
 import matplotlib.pyplot as plt
 
-fdist = FreqDist(tokenized_word)          # SAREBBE BELLO FAR VEDERE UNA EVOLUZIONE GRAFICA DELLA NOSTRA PULIZIA
-fdist.plot(30,cumulative=False)
-plt.show()
+# fdist = FreqDist(tokenized_word)          # SAREBBE BELLO FAR VEDERE UNA EVOLUZIONE GRAFICA DELLA NOSTRA PULIZIA
+# fdist.plot(30,cumulative=False)
+# plt.show()
 
 ####DEFINIAMO LA LISTA DELLE STOPWORDS
 # Stopwords considered as noise in the text. Text may contain stop words such as is, am, are, this, a, an, the, etc.
@@ -47,8 +38,7 @@ from nltk.corpus import stopwords
 nltk.download('stopwords')
 stop_words= set(stopwords.words("english"))
 
-
-# ELIMINAZIONE  le lettere e i numeri
+# ELIMINAZIONE lettere e numeri
 list('abcdefghijklmnopqrstuvwxyz')
 lettere = list('abcdefghijklmnopqrstuvwxyz')
 numeri = list('0123456789')
@@ -60,22 +50,18 @@ for i in range(0,10):
 
 # REMOVING STOPWORDS
 text1 = word_tokenize(raw.lower())
-print(text1)
 stopwords = [x for x in text1 if x not in stop_words ]
-print(stopwords)
 
 # PULISCO INOLTRE DALLA PUNTEGGIATURA
 words_nopunct= [word for word in stopwords if word.isalnum()]
-type(words_nopunct)
 
-len(tokenized_word) #35528
 len(words_nopunct) #5609
 # Come si puo vedere, si passa da 35528 token, a 5609
 
 # Rivediamo graficamente ora i risultati dopo questa prima pulizia
-fdist = FreqDist(stopwords)
-fdist.plot(30,cumulative=False)
-plt.show()
+# fdist = FreqDist(stopwords)
+# fdist.plot(30,cumulative=False)
+# plt.show()
 
 ###TAGGING
 
@@ -120,25 +106,32 @@ finali=list(np.array(words_nopunct)[togli==0])
 len(finali) #4734
 
 
-#visualizziamo i risultati dopo la pulizia finale
 
-fdist = FreqDist(finali)
-fdist.plot(30,cumulative=False)
-plt.show()
+###
+finali = words_nopunct
+###
+
+
+
+
+#visualizziamo i risultati dopo la pulizia finale
+# fdist = FreqDist(finali)
+# fdist.plot(30,cumulative=False)
+# plt.show()
 
 # STEMMING:
 # Stemming is a process of linguistic normalization, which reduces words to their word root word or chops off the derivational affixes.
 # For example, connection, connected, connecting word reduce to a common word "connect".
-from nltk.stem import PorterStemmer
-from nltk.tokenize import sent_tokenize
 
-ps = PorterStemmer()
-stemmed_words=[]
-for w in finali:
-    stemmed_words.append(ps.stem(w))
+# from nltk.stem import PorterStemmer
 
-print("Filtered Sentence:",finali)
-print("Stemmed Sentence:",stemmed_words)
+#ps = PorterStemmer()
+#stemmed_words=[]
+#for w in finali:
+ #   stemmed_words.append(ps.stem(w))
+
+#print("Filtered Sentence:",finali)
+#print("Stemmed Sentence:",stemmed_words)
 
 #LEMMAIZATION:
 # Lemmatization reduces words to their base word, which is linguistically correct lemmas.
@@ -146,16 +139,16 @@ print("Stemmed Sentence:",stemmed_words)
 # Stemmer works on an individual word without knowledge of the context. For example, The word "better" has "good" as its lemma.
 # This thing will miss by stemming because it requires a dictionary look-up.
 
-from nltk.stem.wordnet import WordNetLemmatizer
-nltk.download('wordnet')
-lem = WordNetLemmatizer()
+#from nltk.stem.wordnet import WordNetLemmatizer
+#nltk.download('wordnet')
+#lem = WordNetLemmatizer()
 
-lemmed_words=[]
-for w in finali:
-    lemmed_words.append(lem.lemmatize(w,"v"))
+#lemmed_words=[]
+#for w in finali:
+#    lemmed_words.append(lem.lemmatize(w,"v"))
+
 
 # STRINGA PULITA
-
 dict1=Counter(finali)
 vv={k: v for k, v in sorted(dict1.items(), key=lambda item: item[1])}
 
@@ -165,19 +158,19 @@ dict2=dict((k, v) for k, v in dict1.items() if v <= 100)#potrebbe essere interes
 dict2
 
 # Rivediamo graficamente ora i risultati dopo la pulizia
-fdist = FreqDist(dict2) #si puo fare sia su una stringa che su un dizionario
-fdist.plot(30,cumulative=False)
-plt.show()
-print ("fatto")
+# fdist = FreqDist(dict2) #si puo fare sia su una stringa che su un dizionario
+# fdist.plot(30,cumulative=False)
+# plt.show()
+# print ("fatto")
 
-# bigrams 
+# bigrams
 bigrams = list(nltk.bigrams(finali))
-print(finali)
 
-fdist = FreqDist(bigrams)
-plt.figure(figsize=(20, 10))
-fdist.plot(30,cumulative=False)
-plt.savefig( 'myfig.jpg' ) # Comando che salva l'immagine nella cartella TextMining
+
+# fdist = FreqDist(bigrams)
+# plt.figure(figsize=(20, 10))
+# fdist.plot(30,cumulative=False)
+# plt.savefig( 'myfig.jpg' ) # Comando che salva l'immagine nella cartella TextMining
 
 # Raw popularity count is too crude of a measure.
 # We have to find more clever statistics to be able to pick out meaningful phrases easily.
@@ -190,10 +183,13 @@ plt.savefig( 'myfig.jpg' ) # Comando che salva l'immagine nella cartella TextMin
 # the two words occur independently from one another?
 
 import math
-def logL(p,k,n):
-    return k * math.log(p) + (n-k)* math.log(1-p+0.0001)
 
-unici = list(set(bigrams)) # valori unici dei bigrammi
+def logL(p,k,n):
+    return k * math.log(p) + (n-k)* math.log( 1 - p + 0.00000000001)
+
+from collections import OrderedDict
+unici = list(OrderedDict.fromkeys(bigrams))
+
 
 def log_likelihood_statistic (p,k,n):
     p1 = p[0]
@@ -240,5 +236,6 @@ log_ordinata= sorted(range(len(ris)), key=lambda k: ris[k])  #OCCHIO AL MENO !
 
 for k in range(0,30):
   print(unici[log_ordinata[k]])
+
 
 
