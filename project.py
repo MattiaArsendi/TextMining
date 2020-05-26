@@ -144,6 +144,23 @@ for i in range(0,len(d)):
     p=p+len(d[i])
 p
 
+d[1][('linear', 'method')] = d[1].pop(('linear', 'methods'))
+d[1][('method', 'regression')] = d[1].pop(('methods', 'regression'))
+d[1][('principal', 'component')] = d[1].pop(('principal', 'components'))
+d[2][('linear', 'method')] = d[2].pop(('linear', 'methods'))
+d[2][('method', 'classiﬁcation')] = d[2].pop(('methods', 'classiﬁcation'))
+del d[3][('smooth', 'splines')]
+d[3][('smooth', 'spline')]  =  "52"
+d[4][('smooth', 'method')] = d[4].pop(('smooth', 'methods'))
+#del d[8][('figure', 'show')]
+del d[12][('principal', 'components')]
+d[12][('principal', 'component')]  =  "83"
+#del d[12][('figure', 'show')]
+del d[16][('principal', 'components')]
+d[16][('principal', 'component')]  =  "34"
+
+#############################facendo queste modifiche al dizionario d,
+#non funziona più il ciclo for e non capiamo perchè :(
 
 def forza_arco(freq1,freq2,valori):
     return min(freq1,freq2)/sum(valori)
