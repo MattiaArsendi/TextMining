@@ -12,6 +12,10 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 nltk.download("punkt")
 
+#######################TOKENIZATION
+from nltk.tokenize import word_tokenize
+
+
 
 ##################DEFINIAMO LA LISTA DELLE STOPWORDS
 # Stopwords considered as noise in the text. Text may 
@@ -30,9 +34,7 @@ for i in range(0,25):
     stop_words.add(lettere[i])
 for i in range(0,10):
     stop_words.add(numeri[i])
-    
-len(stop_words)
-type(stop_words)
+
 
 stop_words.add("oo")
 stop_words.add("ooo")
@@ -52,7 +54,6 @@ stop_words.add("et")
 stop_words.add("al")
 stop_words.add("panel")
 stop_words.add("show")
-
 
 
 #######################################TAGGING
@@ -79,7 +80,7 @@ def eliminare(tagged_words1):
     return togli
 
 
-######################################àLEMMAIZATION:
+######################################LEMMAIZATION:
 # Lemmatization reduces words to their base word, which is linguistically correct lemmas.
 # Lemmatization is usually more sophisticated than stemming.
 # Stemmer works on an individual word without knowledge of the context. For example, The word "better" has "good" as its lemma.
@@ -95,13 +96,15 @@ lem = WordNetLemmatizer()
 
 
 import tqdm
+from nltk.probability import FreqDist
+
 
 PATH=["ch2.txt", "ch3.txt", "ch4.txt", "ch5.txt","ch6.txt","ch7.txt",
        "ch8.txt","ch9.txt","ch10.txt","ch11.txt","ch12.txt","ch13.txt",
         "ch14.txt", "ch15.txt","ch16.txt","ch17.txt","ch18.txt"]
 
 d=[]
-#len(PATH)-1)
+
 for i in tqdm.tqdm(range(0, len(PATH))):
     perc=PATH[i]
     f = open(perc,encoding="utf8")
@@ -144,6 +147,7 @@ for i in range(0,len(d)):
     p=p+len(d[i])
     
     
+
 ################################################COSE CHE ABBIAMO DECISO DI NON USARE:
     #STEMMING
     #TOGLIERE PAROLE RARE E FREQUENTI TRAMITE DIZIONARIO
@@ -167,6 +171,7 @@ for i in range(0,len(d)):
 #dict2
 
 # Rivediamo graficamente ora i risultati dopo la pulizia
+#import matplotlib.pyplot as plt
 # fdist = FreqDist(dict2) #si puo fare sia su una stringa che su un dizionario
 # fdist.plot(30,cumulative=False)
 # plt.show()
