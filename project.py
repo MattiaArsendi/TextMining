@@ -18,8 +18,7 @@ from nltk.tokenize import word_tokenize
 
 
 ##################DEFINIAMO LA LISTA DELLE STOPWORDS
-# Stopwords considered as noise in the text. Text may 
-#contain stop words such as is, am, are, this, a, an, the, etc.
+# Stopwords considered as noise in the text. Text may contain stop words such as is, am, are, this, a, an, the, etc.
 
 from nltk.corpus import stopwords
 nltk.download('stopwords')
@@ -60,12 +59,10 @@ stop_words.add("show")
 
 nltk.download('averaged_perceptron_tagger')
 
-
 #lista di tag riferita a parole che vogliamo rimuovere
 REM=['CC','CD','DT','IN','MD','NNP','NNPS','PRP','PSRP$','RB','RBR','RBS','TO','WDT','WPD$','WRB']
 
-#la funzione restituisce un vettore lungo come la lista di tuple con 0 se la tupla è da tenere
-#e 1 se è da togliere
+#la funzione restituisce un vettore lungo come la lista di tuple con 0 se la tupla è da tenere e 1 se è da togliere
 def eliminare(tagged_words1):
    
     togli=np.zeros(len(tagged_words1))
@@ -145,8 +142,54 @@ for i in tqdm.tqdm(range(0, len(PATH))):
 p=0
 for i in range(0,len(d)):
     p=p+len(d[i])
-    
-    
+p
+
+
+def forza_arco(freq1,freq2,valori):
+    return min(freq1,freq2)/sum(valori)
+
+marta = []
+# DEFINIAMO I LEGAMI TRA OGNI NODO
+
+tot = 0
+for i in range(0,len(d)-1):  # SELEZIONA L'i-esimo DIZIONARIO DA ANALIZZARE
+    bigrammi_tot = list(d[i].keys())
+    valori_tot = list(d[i].values())
+
+    for j in range(0,len(bigrammi_tot)-1):# VADO AD ANALIZZARE DENTRO IL DIZIONARIO, SELEZIONANDO IL J-ESIMO BIGRAMMA
+        bigramma_1 = bigrammi_tot[j]
+
+        for z in range(j+1,len(bigrammi_tot)): # LO CONFRONTO CON TUTTI GLI ALTRI BIGRAMMI NEL DIZIONARIO
+            bigramma_2 = bigrammi_tot[z]
+
+            tot = forza_arco(valori_tot[j],valori_tot[z],valori_tot) + tot
+
+            inz = i + 1
+            for h in range(inz,len(d)): # ENTRO NEL H-ESIMO DIZIONARIO
+                bigrammi_2 = list(d[h].keys())
+                valori_2 = list(d[h].values())
+
+                for k in range(0,len(bigrammi_2)): # ENTRO NEL K-ESIMO BIGRAMMA DEL DIZIONARIO H
+                    if bigramma_1 == bigrammi_2[k]:
+                        for t in range(0,len(bigrammi_2)):
+                            if bigramma_2 == bigrammi_2[t]:
+                                tot = forza_arco(valori_2[k],valori_2[t],valori_2) + tot
+            marta.append([bigramma_1,bigramma_2,tot])
+            tot = 0
+
+app = []
+for i in range(0,len(marta)-1):
+    for j in range(i+1,len(marta)):
+        if marta[i][0] == marta[j][0] and marta[i][1] == marta[j][1]:
+            app.append(j)
+
+marta.remove(marta[386])
+marta.remove(marta[131])
+marta.remove(marta[113])
+marta.remove(marta[108])
+
+
+# TOGLI I SECONDI RISULTATI !!!!!!!
 
 ################################################COSE CHE ABBIAMO DECISO DI NON USARE:
     #STEMMING
