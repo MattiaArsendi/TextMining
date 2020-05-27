@@ -96,12 +96,12 @@ import tqdm
 from nltk.probability import FreqDist
 
 
-PATH=[r"C:\Users\Francesco\Desktop\DATA\ch2.txt",r"C:\Users\Francesco\Desktop\DATA\ch3.txt", r"C:\Users\Francesco\Desktop\DATA\ch4.txt", r"C:\Users\Francesco\Desktop\DATA\ch5.txt",r"C:\Users\Francesco\Desktop\DATA\ch6.txt",r"C:\Users\Francesco\Desktop\DATA\ch7.txt",
-       r"C:\Users\Francesco\Desktop\DATA\ch8.txt",r"C:\Users\Francesco\Desktop\DATA\ch9.txt",r"C:\Users\Francesco\Desktop\DATA\ch10.txt",r"C:\Users\Francesco\Desktop\DATA\ch11.txt",r"C:\Users\Francesco\Desktop\DATA\ch12.txt",r"C:\Users\Francesco\Desktop\DATA\ch13.txt",
-       r"C:\Users\Francesco\Desktop\DATA\ch14.txt", r"C:\Users\Francesco\Desktop\DATA\ch15.txt",r"C:\Users\Francesco\Desktop\DATA\ch16.txt",r"C:\Users\Francesco\Desktop\DATA\ch17.txt",r"C:\Users\Francesco\Desktop\DATA\ch18.txt"]
+PATH=["ch2.txt", "ch3.txt", "ch4.txt", "ch5.txt","ch6.txt","ch7.txt",
+        "ch8.txt","ch9.txt","ch10.txt","ch11.txt","ch12.txt","ch13.txt",
+         "ch14.txt", "ch15.txt","ch16.txt","ch17.txt","ch18.txt"]
 
 d=[]
-
+l_cap = [] # Lunghezza di ogni capitolo
 for i in tqdm.tqdm(range(0, len(PATH))):
     perc=PATH[i]
     f = open(perc,encoding="utf8")
@@ -127,6 +127,7 @@ for i in tqdm.tqdm(range(0, len(PATH))):
     finali=lemmed_words
     #ESTRAZIONE DEI BIGRAMMI E LORO DISTRIBUZIONE DI FREQUENZA
     bigrams = list(nltk.bigrams(finali))
+    l_cap.append(len(bigrams))
     fdist = FreqDist(bigrams)
     ####################ESTRAZIONE DEI BIGRAMMI PIU FREQUENTI
     freqtot=len(bigrams)*0.02
@@ -137,7 +138,7 @@ for i in tqdm.tqdm(range(0, len(PATH))):
         d1=sum(dict2.values())
         c1=c1-1
     d.append(dict2)
-    
+
 #contiamo il numero totale di bigrammi estratti    
 p=0
 for i in range(0,len(d)):
@@ -160,10 +161,9 @@ del d[16][('principal', 'components')]
 d[16][('principal', 'component')]  =  34
 
 #############################facendo queste modifiche al dizionario d,
-#non funziona più il ciclo for e non capiamo perchè :(
 
 def forza_arco(freq1,freq2,valori):
-    return min(freq1,freq2)/sum(valori)#valutare se modificare denominatore
+    return min(freq1,freq2)/valori
 
 marta = []
 # DEFINIAMO I LEGAMI TRA OGNI NODO
@@ -178,7 +178,7 @@ for i in range(0,len(d)-1):  # SELEZIONA L'i-esimo DIZIONARIO DA ANALIZZARE
 
         for z in range(j+1,len(bigrammi_tot)): # LO CONFRONTO CON TUTTI GLI ALTRI BIGRAMMI NEL DIZIONARIO
             bigramma_2 = bigrammi_tot[z]
-            tot = forza_arco(valori_tot[j],valori_tot[z],valori_tot) +tot 
+            tot = forza_arco(valori_tot[j],valori_tot[z],l_cap[i]) +tot
 
             inz = i + 1
             for h in range(inz,len(d)): # ENTRO NEL H-ESIMO DIZIONARIO
@@ -189,7 +189,7 @@ for i in range(0,len(d)-1):  # SELEZIONA L'i-esimo DIZIONARIO DA ANALIZZARE
                     if bigramma_1 == bigrammi_2[k]:
                         for t in range(0,len(bigrammi_2)):
                             if bigramma_2 == bigrammi_2[t]:
-                                tot = forza_arco(valori_2[k],valori_2[t],valori_2) + tot
+                                tot = forza_arco(valori_2[k],valori_2[t],l_cap[h]) + tot
             marta.append([bigramma_1,bigramma_2,tot])
             tot = 0
 
