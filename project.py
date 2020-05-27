@@ -96,9 +96,9 @@ import tqdm
 from nltk.probability import FreqDist
 
 
-PATH=["ch2.txt", "ch3.txt", "ch4.txt", "ch5.txt","ch6.txt","ch7.txt",
-       "ch8.txt","ch9.txt","ch10.txt","ch11.txt","ch12.txt","ch13.txt",
-        "ch14.txt", "ch15.txt","ch16.txt","ch17.txt","ch18.txt"]
+PATH=[r"C:\Users\Francesco\Desktop\DATA\ch2.txt",r"C:\Users\Francesco\Desktop\DATA\ch3.txt", r"C:\Users\Francesco\Desktop\DATA\ch4.txt", r"C:\Users\Francesco\Desktop\DATA\ch5.txt",r"C:\Users\Francesco\Desktop\DATA\ch6.txt",r"C:\Users\Francesco\Desktop\DATA\ch7.txt",
+       r"C:\Users\Francesco\Desktop\DATA\ch8.txt",r"C:\Users\Francesco\Desktop\DATA\ch9.txt",r"C:\Users\Francesco\Desktop\DATA\ch10.txt",r"C:\Users\Francesco\Desktop\DATA\ch11.txt",r"C:\Users\Francesco\Desktop\DATA\ch12.txt",r"C:\Users\Francesco\Desktop\DATA\ch13.txt",
+       r"C:\Users\Francesco\Desktop\DATA\ch14.txt", r"C:\Users\Francesco\Desktop\DATA\ch15.txt",r"C:\Users\Francesco\Desktop\DATA\ch16.txt",r"C:\Users\Francesco\Desktop\DATA\ch17.txt",r"C:\Users\Francesco\Desktop\DATA\ch18.txt"]
 
 d=[]
 
@@ -150,20 +150,20 @@ d[1][('principal', 'component')] = d[1].pop(('principal', 'components'))
 d[2][('linear', 'method')] = d[2].pop(('linear', 'methods'))
 d[2][('method', 'classiﬁcation')] = d[2].pop(('methods', 'classiﬁcation'))
 del d[3][('smooth', 'splines')]
-d[3][('smooth', 'spline')]  =  "52"
+d[3][('smooth', 'spline')]  =  52
 d[4][('smooth', 'method')] = d[4].pop(('smooth', 'methods'))
 #del d[8][('figure', 'show')]
 del d[12][('principal', 'components')]
-d[12][('principal', 'component')]  =  "83"
+d[12][('principal', 'component')]  =  83
 #del d[12][('figure', 'show')]
 del d[16][('principal', 'components')]
-d[16][('principal', 'component')]  =  "34"
+d[16][('principal', 'component')]  =  34
 
 #############################facendo queste modifiche al dizionario d,
 #non funziona più il ciclo for e non capiamo perchè :(
 
 def forza_arco(freq1,freq2,valori):
-    return min(freq1,freq2)/sum(valori)
+    return min(freq1,freq2)/sum(valori)#valutare se modificare denominatore
 
 marta = []
 # DEFINIAMO I LEGAMI TRA OGNI NODO
@@ -178,8 +178,7 @@ for i in range(0,len(d)-1):  # SELEZIONA L'i-esimo DIZIONARIO DA ANALIZZARE
 
         for z in range(j+1,len(bigrammi_tot)): # LO CONFRONTO CON TUTTI GLI ALTRI BIGRAMMI NEL DIZIONARIO
             bigramma_2 = bigrammi_tot[z]
-
-            tot = forza_arco(valori_tot[j],valori_tot[z],valori_tot) + tot
+            tot = forza_arco(valori_tot[j],valori_tot[z],valori_tot) +tot 
 
             inz = i + 1
             for h in range(inz,len(d)): # ENTRO NEL H-ESIMO DIZIONARIO
