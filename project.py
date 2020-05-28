@@ -52,9 +52,8 @@ stop_words.add("pn")
 stop_words.add("et")
 stop_words.add("al")
 stop_words.add("panel")
-stop_words.add("show")
-
-
+stop_words.add("figure")
+stop_words.add("err")
 
 #######################################TAGGING
 
@@ -141,10 +140,7 @@ for i in tqdm.tqdm(range(0, len(PATH))):
     d.append(dict2)
 
 #contiamo il numero totale di bigrammi estratti    
-p=0
-for i in range(0,len(d)):
-    p=p+len(d[i])
-p
+
 
 d[1][('linear', 'method')] = d[1].pop(('linear', 'methods'))
 d[1][('method', 'regression')] = d[1].pop(('methods', 'regression'))
@@ -154,13 +150,11 @@ d[2][('method', 'classiﬁcation')] = d[2].pop(('methods', 'classiﬁcation'))
 del d[3][('smooth', 'splines')]
 d[3][('smooth', 'spline')]  =  52
 d[4][('smooth', 'method')] = d[4].pop(('smooth', 'methods'))
-del d[8][('figure', 'show')]
 del d[12][('principal', 'components')]
 d[12][('principal', 'component')]  =  83
-del d[12][('figure', 'show')]
 del d[16][('principal', 'components')]
 d[16][('principal', 'component')]  =  34
-del d[5][('error', 'err')]
+
 
 #############################facendo queste modifiche al dizionario d,
 
