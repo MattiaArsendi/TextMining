@@ -55,6 +55,7 @@ stop_words.add("panel")
 stop_words.add("show")
 
 
+
 #######################################TAGGING
 
 nltk.download('averaged_perceptron_tagger')
@@ -153,12 +154,13 @@ d[2][('method', 'classiﬁcation')] = d[2].pop(('methods', 'classiﬁcation'))
 del d[3][('smooth', 'splines')]
 d[3][('smooth', 'spline')]  =  52
 d[4][('smooth', 'method')] = d[4].pop(('smooth', 'methods'))
-#del d[8][('figure', 'show')]
+del d[8][('figure', 'show')]
 del d[12][('principal', 'components')]
 d[12][('principal', 'component')]  =  83
-#del d[12][('figure', 'show')]
+del d[12][('figure', 'show')]
 del d[16][('principal', 'components')]
 d[16][('principal', 'component')]  =  34
+del d[5][('error', 'err')]
 
 #############################facendo queste modifiche al dizionario d,
 
@@ -199,11 +201,10 @@ for i in range(0,len(marta)-1):
         if marta[i][0] == marta[j][0] and marta[i][1] == marta[j][1]:
             app.append(j)
 
-marta.remove(marta[386])
-marta.remove(marta[131])
-marta.remove(marta[113])
-marta.remove(marta[108])
-
+marta.remove(marta[357])
+marta.remove(marta[139])
+marta.remove(marta[119])
+marta.remove(marta[118])
 
 # TOGLI I SECONDI RISULTATI !!!!!!!
 
