@@ -200,7 +200,124 @@ marta.remove(marta[139])
 marta.remove(marta[119])
 marta.remove(marta[118])
 
-# TOGLI I SECONDI RISULTATI !!!!!!!
+
+# FILE FOR GEPHY
+import csv
+
+with open("DatiGrezzi.csv","w", newline='') as f:
+    thewriter = csv.writer(f)
+
+    thewriter.writerow(['Source', 'Target', 'Weight'])
+
+    for i in marta:
+        thewriter.writerow(i)
+
+
+###################### COSTRUZIONE DELLA MATRICE DI ADIACENZA
+import pandas as pd
+
+data = pd.read_csv("OfficialEdges.csv",sep=';', header=None)
+edges = data.drop([0], axis=0).to_numpy()
+
+data = pd.read_csv("OfficialNodes.csv",sep=';', header=None)
+nodi = data.drop([0], axis=0).to_numpy()
+
+# MATRICE DI ADIACENZA
+matrix = np.zeros((nodi.shape[0],nodi.shape[0]))
+for i in range(0,edges.shape[0]):
+    matrix[int(edges[i,0]),int(edges[i,1])] = float(edges[i,2])
+    matrix[int(edges[i, 1]), int(edges[i, 0])] = float(edges[i, 2])
+
+############################# INIZIAMO LO STUDIO DELLA RETE
+import networkx as nx
+import matplotlib.pyplot as plt
+
+G = nx.from_numpy_matrix(matrix)
+print(nx.info(G))
+
+# WEIGHTED DEGREE
+degree = []
+for i in range(0, matrix.shape[0]):
+    degree.append((nodi[i, 1], sum(matrix[i, :])))
+
+
+plt.hist(dict(degree).values())
+plt.title("Istrogramma dei gradi")
+plt.xlabel("Grado pesato")
+plt.ylabel("Frequenza")
+plt.show()
+
+
+# BETWEENNESS CENTRALITY
+g = nx.betweenness_centrality(G,weight=True)
+# Betweeness ordinata per valori decrescenti
+sorted(g.items(), key=lambda x:x[1], reverse=True)
+
+plt.hist(g.values())
+plt.title("Istrogramma della betweenness")
+plt.xlabel("Betweenness")
+plt.ylabel("Frequenza")
+plt.show()
+
+# Densità grafo
+density = nx.density(G)  # CONTROLLA CHE SU GEPHY VENGA UGUALE
+
+# Essendo un grafico disconnesso, andiamo a calcolarci the average shortest path length PER LA COMPONENTE PIU GRANDE
+largest_cc = list(max(nx.connected_components(G), key=len))
+
+
+index = []
+for i in range(0,edges.shape[0]):
+    count = 0
+    for j in range(0,len(largest_cc)):
+        if int(edges[i,0]) != largest_cc[j]:
+            count = count + 1
+    if count == len(largest_cc):
+        index.append(i)
+for i in range(0,edges.shape[0]):
+    count = 0
+    for j in range(0,len(largest_cc)):
+        if int(edges[i,1]) != largest_cc[j]:
+            count = count + 1
+    if count == len(largest_cc):
+        index.append(i)
+
+from collections import OrderedDict
+unique = list(OrderedDict.fromkeys(index))
+
+unique = sorted(unique,reverse=True)
+edges_componente_maggiore = edges
+for i in range(0,len(unique)):
+    edges_componente_maggiore = np.delete(edges_componente_maggiore, unique[i], 0)
+edges_componente_maggiore.shape
+
+
+# MATRICE DI ADIACENZA COMPONENTE MAGGIORE
+matrix_cc = np.zeros((nodi.shape[0],nodi.shape[0]))
+for i in range(0,edges_componente_maggiore.shape[0]):
+    matrix_cc[int(edges_componente_maggiore[i,0]),int(edges_componente_maggiore[i,1])] = float(edges_componente_maggiore[i,2])
+    matrix_cc[int(edges_componente_maggiore[i,1]),int(edges_componente_maggiore[i,0])] = float(edges_componente_maggiore[i,2])
+
+delet = [97,96,50,49,48,47,47,45,44]
+
+for i in range(0,len(delet)):
+    matrix_cc = np.delete(matrix_cc, delet[i], 0)
+    matrix_cc = np.delete(matrix_cc, delet[i], 1)
+matrix_cc.shape
+
+G_cc = nx.from_numpy_matrix(matrix_cc)
+print(nx.info(G_cc))
+
+len(nx.shortest_path(G_cc))
+nx.average_shortest_path_length(G_cc)
+ASPL = nx.average_shortest_path_length(G_cc)  # valore molto alto, da controllare
+nx.diameter(nx.path_graph(largest_cc)) # Lunghezza del più lungo shortest path della componente più grande
+
+
+
+
+
+
 
 ################################################COSE CHE ABBIAMO DECISO DI NON USARE:
     #STEMMING
