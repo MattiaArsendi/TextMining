@@ -215,6 +215,7 @@ with open("DatiGrezzi.csv","w", newline='') as f:
 
 ###################### COSTRUZIONE DELLA MATRICE DI ADIACENZA
 import pandas as pd
+import numpy as np
 
 data = pd.read_csv("OfficialEdges.csv",sep=';', header=None)
 edges = data.drop([0], axis=0).to_numpy()
@@ -237,11 +238,18 @@ print(nx.info(G))
 
 # WEIGHTED DEGREE
 degree = []
+alpha = 1.5 # Da far variare per 0.5, 1 e 1.5
 for i in range(0, matrix.shape[0]):
-    degree.append((nodi[i, 1], sum(matrix[i, :])))
+    s = 0
+    k = 0
+    for j in range(0,matrix.shape[1]):
+        if matrix[i,j] != 0:
+            k = k + 1
+            s = s + matrix[i,j]
+    degree.append(k * (s/k) ** alpha)
 
 
-plt.hist(dict(degree).values())
+plt.hist(degree)
 plt.title("Istrogramma dei gradi")
 plt.xlabel("Grado pesato")
 plt.ylabel("Frequenza")
@@ -260,11 +268,10 @@ plt.ylabel("Frequenza")
 plt.show()
 
 # Densità grafo
-density = nx.density(G)  # CONTROLLA CHE SU GEPHY VENGA UGUALE
+density = nx.density(G)
 
-# Essendo un grafico disconnesso, andiamo a calcolarci the average shortest path length PER LA COMPONENTE PIU GRANDE
+####### Essendo un grafico disconnesso, andiamo a calcolarci the average shortest path length PER LA COMPONENTE PIU GRANDE
 largest_cc = list(max(nx.connected_components(G), key=len))
-
 
 index = []
 for i in range(0,edges.shape[0]):
@@ -298,26 +305,54 @@ for i in range(0,edges_componente_maggiore.shape[0]):
     matrix_cc[int(edges_componente_maggiore[i,0]),int(edges_componente_maggiore[i,1])] = float(edges_componente_maggiore[i,2])
     matrix_cc[int(edges_componente_maggiore[i,1]),int(edges_componente_maggiore[i,0])] = float(edges_componente_maggiore[i,2])
 
-delet = [97,96,50,49,48,47,47,45,44]
+delet = [97,96,50,49,48,47,46,45,44]
 
 for i in range(0,len(delet)):
     matrix_cc = np.delete(matrix_cc, delet[i], 0)
     matrix_cc = np.delete(matrix_cc, delet[i], 1)
 matrix_cc.shape
 
-G_cc = nx.from_numpy_matrix(matrix_cc)
-print(nx.info(G_cc))
+ASPL = nx.average_shortest_path_length(G_cc) # 3.008
+nx.diameter(G_cc)  #Lunghezza del più lungo shortest path della componente più grande
 
-len(nx.shortest_path(G_cc))
-nx.average_shortest_path_length(G_cc)
-ASPL = nx.average_shortest_path_length(G_cc)  # valore molto alto, da controllare
-nx.diameter(nx.path_graph(largest_cc)) # Lunghezza del più lungo shortest path della componente più grande
+################# COMMUNITY DETECTION
+pip install python-louvain
+import community
+
+# Algoritmo di Girvan_Newman
+communities = next(nx.community.girvan_newman(G))
+len(communities)  # vengono identificate 4 comunità
+print(communities)  # tupla in cui ci sono le liste dei nodi facenti parte dic iascuna comunità
+
+# creo il dizonario a partire dall'oggetto communities
+# prendo il numero di nodo e lo associo al progressivo della community
+
+part_girvan_newman = dict()
+id_comm = 0
+
+for comm in communities:
+    for node in comm:
+        part_girvan_newman.setdefault(node, id_comm)  # stedefault associa chiave e valore
+    id_comm += 1
+
+community.modularity(part_girvan_newman, G)
+
+# Algoritmo di Louvain
+dc = community.best_partition(G)  # restituisce un dizionario in cui ciascun nodo è associato alla comuntà
+dc
+# 8 comunità
+community.modularity(dc, G)
 
 
+################## CODICE CHE  SERVE PER IMPORTARE SU GEPHI
+import csv
 
+louvain = list(dc.values())
+with open("Louvain.csv","w", newline='') as f:
+    thewriter = csv.writer(f)
 
-
-
+    thewriter.writerow(['Category'])
+    thewriter.writerows([[hit] for hit in louvain])
 
 ################################################COSE CHE ABBIAMO DECISO DI NON USARE:
     #STEMMING
