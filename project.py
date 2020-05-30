@@ -238,7 +238,7 @@ print(nx.info(G))
 
 # WEIGHTED DEGREE
 degree = []
-alpha = 1.5 # Da far variare per 0.5, 1 e 1.5
+alpha = 1 # Da far variare per 0.5, 1 e 1.5
 for i in range(0, matrix.shape[0]):
     s = 0
     k = 0
@@ -257,11 +257,98 @@ plt.show()
 
 
 # BETWEENNESS CENTRALITY
-g = nx.betweenness_centrality(G,weight=True)
-# Betweeness ordinata per valori decrescenti
-sorted(g.items(), key=lambda x:x[1], reverse=True)
+from collections import defaultdict
 
-plt.hist(g.values())
+alpha = 0.5 # da far variare, ma comunque è una nostra scelta
+
+class Graph():
+    def __init__(self):
+        """
+        self.edges is a dict of all possible next nodes
+        e.g. {'X': ['A', 'B', 'C', 'E'], ...}
+        self.weights has all the weights between two nodes,
+        with the two nodes as a tuple as the key
+        e.g. {('X', 'A'): 7, ('X', 'B'): 2, ...}
+        """
+        self.edges = defaultdict(list)
+        self.weights = {}
+
+    def add_edge(self, from_node, to_node, weight):
+        # Note: assumes edges are bi-directional
+        self.edges[from_node].append(to_node)
+        self.edges[to_node].append(from_node)
+        self.weights[(from_node, to_node)] =  int( 1 / ( float(weight) + 0.00000000001 )** alpha )
+        self.weights[(to_node, from_node)] =  int( 1 / ( float(weight) + 0.00000000001 )** alpha )
+graph = Graph()
+
+edges[:,0] = edges[:,0].astype('str')
+edges[:,1] = edges[:,1].astype('str')
+edges1 = list(edges)
+
+for edge in edges1:
+    graph.add_edge(*edge)
+
+
+def dijsktra(graph, initial, end):
+    # shortest paths is a dict of nodes
+    # whose value is a tuple of (previous node, weight)
+    shortest_paths = {initial: (None, 0)}
+    current_node = initial
+    visited = set()
+
+    while current_node != end:
+        visited.add(current_node)
+        destinations = graph.edges[current_node]
+        weight_to_current_node = shortest_paths[current_node][1]
+
+        for next_node in destinations:
+            weight = graph.weights[(current_node, next_node)] + weight_to_current_node
+            if next_node not in shortest_paths:
+                shortest_paths[next_node] = (current_node, weight)
+            else:
+                current_shortest_weight = shortest_paths[next_node][1]
+                if current_shortest_weight > weight:
+                    shortest_paths[next_node] = (current_node, weight)
+
+        next_destinations = {node: shortest_paths[node] for node in shortest_paths if node not in visited}
+        if not next_destinations:
+            return "Route Not Possible"
+        # next node is the destination with the lowest weight
+        current_node = min(next_destinations, key=lambda k: next_destinations[k][1])
+
+    # Work back through destinations in shortest path
+    path = []
+    while current_node is not None:
+        path.append(current_node)
+        next_node = shortest_paths[current_node][0]
+        current_node = next_node
+    # Reverse path
+    path = path[::-1]
+    return path
+
+dijsktra(graph, '0', '40') # ESEMPIO OUTPUT
+
+d1 = []
+for i in range(0,nodi.shape[0]):
+    for j in range(0,nodi.shape[0]):
+        if nodi[i,0] != nodi[j,0]:
+            d1.append(dijsktra(graph, str(i), str(j)) )
+
+bet = []
+for i in range(0,nodi.shape[0]):
+    count  = 0
+    tot = 0
+    for j in range(0,len(d1)):
+        if d1[j] != 'Route Not Possible':
+            tot = tot + 1
+        if d1[j][0] != str(nodi[i,0]) and d1[len(d1[j])] != str(nodi[i,0]):
+            for k in range(0,len(d1[j])):
+                if d1[j][k] == str(nodi[i,0]):
+                    count = count + 1
+                    break
+    bet.append(count/tot)
+
+plt.hist(bet)
 plt.title("Istrogramma della betweenness")
 plt.xlabel("Betweenness")
 plt.ylabel("Frequenza")
